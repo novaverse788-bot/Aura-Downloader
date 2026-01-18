@@ -47,7 +47,7 @@ const MetadataExtractor: React.FC = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3001/api/formats/${videoId}`);
+            const response = await fetch(`/api/formats/${videoId}`);
             const result = await response.json();
 
             if (result.success && result.formats) {

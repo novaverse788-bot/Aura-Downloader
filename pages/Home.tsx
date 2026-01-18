@@ -113,7 +113,7 @@ const Home: React.FC = () => {
         setDownloading(prev => ({ ...prev, [formatId]: true }));
         setProgress(prev => ({ ...prev, [formatId]: 5 }));
 
-        const BACKEND_URL = 'http://localhost:3001';
+        const BACKEND_URL = '';
 
         // Reset state helper
         const resetState = (delay = 2000) => {
