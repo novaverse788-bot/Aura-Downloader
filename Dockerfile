@@ -1,5 +1,5 @@
 # Use Node.js LTS (Long Term Support) as base image
-FROM node:18-bullseye-slim
+FROM node:20-bookworm-slim
 
 # Install system dependencies required for yt-dlp and ffmpeg
 # python3: required for yt-dlp
