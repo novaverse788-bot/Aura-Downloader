@@ -13,7 +13,10 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Paths for Local Dev (Windows) vs Production (Docker)
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+// Paths for Local Dev (Windows) vs Production (Docker)
+// Reliable check: If not Windows, we assume we are in the Docker/Linux environment
+const IS_WINDOWS = process.platform === 'win32';
+const IS_PRODUCTION = !IS_WINDOWS;
 
 // Fallback to the specific local path if not in production
 const LOCAL_YTDLP = 'C:\\Users\\lenovo\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python313\\Scripts\\yt-dlp.exe';
