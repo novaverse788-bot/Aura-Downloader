@@ -25,6 +25,9 @@ const LOCAL_FFMPEG_DIR = 'C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WinGet\\
 const YTDLP_PATH = IS_PRODUCTION ? 'yt-dlp' : LOCAL_YTDLP;
 const FFMPEG_PATH = IS_PRODUCTION ? 'ffmpeg' : LOCAL_FFMPEG_DIR;
 
+// yt-dlp flags for YouTube - JS runtime and cookies for bot bypass
+const YTDLP_EXTRA_FLAGS = '--js-runtimes node --cookies-from-browser chrome --no-warnings';
+
 app.use(cors());
 app.use(express.json());
 
@@ -64,10 +67,10 @@ async function getVideoFormats(videoId) {
         let cmd;
         if (IS_PRODUCTION) {
             // Linux: Simple execution
-            cmd = `${YTDLP_PATH} -j "${url}"`;
+            cmd = `${YTDLP_PATH} ${YTDLP_EXTRA_FLAGS} -j "${url}"`;
         } else {
             // Windows: PowerShell syntax
-            cmd = `& "${YTDLP_PATH}" -j "${url}"`;
+            cmd = `& "${YTDLP_PATH}" ${YTDLP_EXTRA_FLAGS} -j "${url}"`;
         }
 
         const { stdout } = await executeCommand(cmd);
@@ -126,9 +129,9 @@ app.get('/api/stream/:videoId', async (req, res) => {
     try {
         let titleCmd;
         if (IS_PRODUCTION) {
-            titleCmd = `${YTDLP_PATH} --get-filename -o "%(title)s" "https://www.youtube.com/watch?v=${videoId}"`;
+            titleCmd = `${YTDLP_PATH} ${YTDLP_EXTRA_FLAGS} --get-filename -o "%(title)s" "https://www.youtube.com/watch?v=${videoId}"`;
         } else {
-            titleCmd = `& "${YTDLP_PATH}" --get-filename -o "%(title)s" "https://www.youtube.com/watch?v=${videoId}" --ffmpeg-location "${FFMPEG_PATH}"`;
+            titleCmd = `& "${YTDLP_PATH}" ${YTDLP_EXTRA_FLAGS} --get-filename -o "%(title)s" "https://www.youtube.com/watch?v=${videoId}" --ffmpeg-location "${FFMPEG_PATH}"`;
         }
 
         const { stdout: titleOut } = await executeCommand(titleCmd);
@@ -138,7 +141,12 @@ app.get('/api/stream/:videoId', async (req, res) => {
         const filename = `${safeTitle}.${ext}`;
 
         const url = `https://www.youtube.com/watch?v=${videoId}`;
-        let args = [url, '-o', '-']; // Output to stdout
+        let args = [
+            '--js-runtimes', 'node',
+            '--cookies-from-browser', 'chrome',
+            '--no-warnings',
+            url, '-o', '-'
+        ]; // Output to stdout
 
         if (!IS_PRODUCTION) {
             args.push('--ffmpeg-location', FFMPEG_PATH);
