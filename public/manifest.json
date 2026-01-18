@@ -1,0 +1,16 @@
+{
+    "short_name": "Aura",
+    "name": "Aura Downloader",
+    "description": "Premium Video Downloader & Metadata Tool",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "192x192 512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#3ea6ff",
+    "background_color": "#ffffff"
+}
